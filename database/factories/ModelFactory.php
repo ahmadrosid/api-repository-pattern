@@ -1,19 +1,20 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| Here you may define all of your model factories. Model factories give
-| you a convenient way to create models for testing and seeding your
-| database. Just tell the factory how a default model should look.
-|
-*/
+use App\Services\Notes\NoteModel;
+use App\Services\Users\UserModel;
+use Illuminate\Support\Facades\Hash;
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(UserModel::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->email,
+        'password' => Hash::make('secret')
+    ];
+});
+
+$factory->define(NoteModel::class, function (Faker\Generator $faker) {
+    return [
+        'title' => ucfirst(implode(" ", $faker->words)),
+        'text' => $faker->text,
     ];
 });

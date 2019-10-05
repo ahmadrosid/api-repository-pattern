@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\Notes\NoteModel;
+use App\Services\Users\UserModel;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,6 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call('UsersTableSeeder');
+        factory(UserModel::class, 50)
+            ->create()
+            ->each(function (UserModel $user) {
+                $rand = rand(1, 12);
+                for ($i = 0; $i < $rand; $i++){
+                    $user->notes()->save(factory(NoteModel::class)->make());
+                }
+            });
     }
 }

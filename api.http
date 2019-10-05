@@ -1,0 +1,75 @@
+POST http://0.0.0.0:8000/users/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "alahmadrosid@gmail.com",
+  "name": "ahmadrosid",
+  "password": "secret"
+}
+
+###
+
+POST http://0.0.0.0:8000/users/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "alahmadrosid@gmail.com",
+  "password": "secret"
+}
+
+###
+GET http://0.0.0.0:8000/users/me
+Accept: application/json
+Authorization: Bearer Pw1qN82tT8m62LjXmjOxfwugldAIFeCv
+
+###
+GET http://0.0.0.0:8000/notes?include=users
+Accept: application/json
+Authorization: Bearer Pw1qN82tT8m62LjXmjOxfwugldAIFeCv
+
+###
+GET http://0.0.0.0:8000/notes/122
+Accept: application/json
+
+###
+GET http://0.0.0.0:8000/notes/1?include=users
+Accept: application/json
+
+###
+GET http://0.0.0.0:8000/notes/4
+Accept: application/json
+
+###
+DELETE http://0.0.0.0:8000/notes/1
+Accept: application/json
+
+###
+POST http://0.0.0.0:8000/notes
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Hi welcome",
+  "text": "Where are you?",
+  "user_id": 1
+}
+
+###
+
+PATCH http://0.0.0.0:8000/notes/4
+Accept: application/json
+Content-Type: application/json
+
+###
+
+PATCH http://0.0.0.0:8000/notes/4
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Hi welcome",
+  "text": "Where are you?",
+  "user_id": 1
+}
