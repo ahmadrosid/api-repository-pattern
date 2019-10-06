@@ -29,7 +29,7 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Exception  $exception
+     * @param \Exception $exception
      * @return void
      */
     public function report(Exception $exception)
@@ -40,13 +40,13 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Exception $exception
      * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof ValidationException){
+        if ($exception instanceof ValidationException) {
             $errors = [
                 'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
                 'errors' => $exception->errors()
@@ -57,10 +57,10 @@ class Handler extends ExceptionHandler
             );
         }
 
-        if ($exception instanceof ModelNotFoundException){
+        if ($exception instanceof ModelNotFoundException) {
             $errors = [
                 'status' => Response::HTTP_NOT_FOUND,
-                'errors' => $exception->getMessage()
+                'errors' => [$exception->getMessage()]
             ];
             return response()->json(
                 $errors,

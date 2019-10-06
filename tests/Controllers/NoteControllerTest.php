@@ -75,7 +75,7 @@ class NoteControllerTest extends TestCase
             ]
         );
 
-        $this->json('GET', "/notes/{$note_id}", [], $this->header)
+        $this->json('GET', "/notes/$note_id", [], $this->header)
             ->seeStatusCode(Response::HTTP_OK)
             ->seeJsonStructure([
                 'data' => [
@@ -85,6 +85,20 @@ class NoteControllerTest extends TestCase
                 ]
             ])
             ->seeJson($payload);
+    }
+
+    public function testShowNotFound()
+    {
+        $note_id = 0;
+
+        $this->json('GET', "/notes/$note_id", [], $this->header)
+            ->seeStatusCode(Response::HTTP_NOT_FOUND)
+            ->seeJson([
+                'status' => Response::HTTP_NOT_FOUND,
+                'errors' => [
+                    "No query results for model [App\\Services\\Notes\\NoteModel] $note_id"
+                ]
+            ]);
     }
 
     public function testStoreNote()
