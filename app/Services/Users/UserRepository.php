@@ -53,7 +53,6 @@ class UserRepository
         ]);
 
         return [
-            'code' => Response::HTTP_OK,
             'access_token' => $token
         ];
     }
