@@ -20,7 +20,7 @@ class NoteRepository
     public function create($data)
     {
         return NoteModel::create(array_merge(
-            $data, ['user_id' => Auth::user()->id ]
+            $data, ['user_id' => Auth::user()->id]
         ));
     }
 

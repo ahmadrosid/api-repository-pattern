@@ -111,31 +111,50 @@ class JsonApiAdapter
      */
     private function serializeData($data)
     {
-        if (null == $this->transformer){
-            throw new Exception("No transformer. Please et using setTransformer");
+        if (null == $this->transformer) {
+            throw new Exception("No transformer. Please set using setTransformer");
         }
 
-        if (null == $this->serializer){
+        if (null == $this->serializer) {
             $this->serializer = new JsonApiSerializer($this->baseUrl());
         }
 
         $this->fractal->setSerializer($this->serializer);
+        $this->parseIncludeIfNeeded();
 
-        if (!empty(app('request')->query('include'))) {
-            $this->fractal->parseIncludes(app('request')->query('include'));
-        }
-
-        if ($data instanceof LengthAwarePaginator){
-            $resource = new Collection($data, $this->transformer, $this->transformer->type);
-            $paginator = new IlluminatePaginatorAdapter($data);
-            $resource->setPaginator($paginator);
-        }else{
-            $resource = new Item($data, $this->transformer, $this->transformer->type);
-        }
-
+        $resource = $this->createResource($data);
         $result = $this->fractal->createData($resource)->toArray();
 
         return $this->appendMeta($result);
+    }
+
+    /**
+     * return void
+     */
+    private function parseIncludeIfNeeded()
+    {
+        if (!empty(app('request')->query('include'))) {
+            $this->fractal->parseIncludes(app('request')->query('include'));
+        }
+    }
+
+    /**
+     * @param $data
+     * @return Collection|Item
+     */
+    private function createResource($data)
+    {
+        if ($data instanceof LengthAwarePaginator) {
+            $resource = new Collection($data, $this->transformer, $this->transformer->type);
+            $paginator = new IlluminatePaginatorAdapter($data);
+            $resource->setPaginator($paginator);
+        } elseif ($data instanceof \Illuminate\Support\Collection) {
+            $resource = new Collection($data, $this->transformer, $this->transformer->type);
+        } else {
+            $resource = new Item($data, $this->transformer, $this->transformer->type);
+        }
+
+        return $resource;
     }
 
     /**
@@ -144,7 +163,7 @@ class JsonApiAdapter
      */
     private function appendMeta($result)
     {
-        if (isset($result['meta']['pagination'])){
+        if (isset($result['meta']['pagination'])) {
             $meta = Arr::only($result['meta']['pagination'], ['total', 'count']);
             Arr::forget($result, 'meta.pagination');
             Arr::set($result, 'meta', $meta);

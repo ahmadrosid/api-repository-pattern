@@ -3,6 +3,7 @@
 use App\Services\Notes\NoteModel;
 use App\Services\Users\UserModel;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Laravel\Lumen\Testing\DatabaseTransactions;
 
 class NoteControllerTest extends TestCase
@@ -40,7 +41,7 @@ class NoteControllerTest extends TestCase
         $pageLimit = 15;
         $totalNotes = 20;
 
-        $notes = factory(NoteModel::class, $totalNotes)->create([
+        factory(NoteModel::class, $totalNotes)->create([
             'user_id' => $this->user->id
         ]);
 
@@ -54,9 +55,36 @@ class NoteControllerTest extends TestCase
                 'links' => ['self', 'first', 'next', 'last']
             ])
             ->seeJson([
-                'total' => $notes->count(),
+                'total' => $totalNotes,
                 'count' => $pageLimit
             ]);
+    }
+
+    public function testShowNote()
+    {
+        $note = factory(NoteModel::class)->create([
+            'user_id' => $this->user->id
+        ]);
+
+        $note_id = Arr::pull($note, 'id');
+
+        $payload = array_merge($note->toArray(),
+            [
+                'created_at' => $note->created_at->toISOString(),
+                'updated_at' => $note->created_at->toISOString()
+            ]
+        );
+
+        $this->json('GET', "/notes/{$note_id}", [], $this->header)
+            ->seeStatusCode(Response::HTTP_OK)
+            ->seeJsonStructure([
+                'data' => [
+                    'type', 'id',
+                    'attributes' => ['title', 'text', 'user_id', 'created_at', 'updated_at'],
+                    'links' => ['self']
+                ]
+            ])
+            ->seeJson($payload);
     }
 
     public function testStoreNote()
