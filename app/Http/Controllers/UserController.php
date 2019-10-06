@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 
 use App\Services\JsonApiAdapter;
 use App\Services\Users\LoginRequest;
+use App\Services\Users\LoginTransformer;
 use App\Services\Users\RegisterRequest;
 use App\Services\Users\UserRepository;
 use App\Services\Users\UserTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 
 class UserController
 {

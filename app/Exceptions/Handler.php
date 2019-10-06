@@ -67,6 +67,21 @@ class Handler extends ExceptionHandler
                 Response::HTTP_NOT_FOUND
             );
         }
+
+        if ($exception instanceof InvalidCredentialException){
+            $errors = [
+                'code' => Response::HTTP_NOT_FOUND,
+                'errors' => [
+                    'Invalid email or username.'
+                ]
+            ];
+
+            return response()->json(
+                $errors,
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
         return parent::render($request, $exception);
     }
 }

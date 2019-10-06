@@ -2,6 +2,9 @@
 
 namespace App\Services\Users;
 
+use App\Exceptions\InvalidCredentialException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -30,15 +33,17 @@ class UserRepository
 
     public function login(array $data)
     {
-        $user = UserModel::where('email', Arr::get($data, 'email'))
-            ->first();
+        $user = UserModel::where('email', Arr::get($data, 'email'))->first();
 
-        if (!Hash::check($data['password'], $user->password)){
-            return [
-                'errors' => [
-                    'Invalid email or username.'
-                ]
-            ];
+        if (empty($user)) {
+            throw new InvalidCredentialException;
+        }
+
+        if (!Hash::check(
+            Arr::get($data, 'password'),
+            Arr::get($user, 'password')
+        )) {
+            throw new InvalidCredentialException;
         }
 
         $token = Str::random(32);
@@ -47,6 +52,9 @@ class UserRepository
             'access_token' => hash('sha256', $token)
         ]);
 
-        return [ 'access_token' => $token ];
+        return [
+            'code' => Response::HTTP_OK,
+            'access_token' => $token
+        ];
     }
 }

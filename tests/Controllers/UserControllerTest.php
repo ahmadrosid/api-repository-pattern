@@ -41,9 +41,9 @@ class UserControllerTest extends TestCase
     {
         $user = factory(UserModel::class)->create();
         $this->json('POST', '/users/login', [
-            'email' => $user['email'],
-            'password' => 'secret'
-        ])
+                'email' => $user['email'],
+                'password' => 'secret'
+            ])
             ->seeStatusCode(Response::HTTP_OK)
             ->seeJsonStructure(['access_token']);
 
@@ -55,6 +55,23 @@ class UserControllerTest extends TestCase
             'access_token' => $access_token,
             'user' => $user->getAttributes()
         ];
+    }
+
+    public function testInvalidLoginCredential()
+    {
+        $payload = [
+            'email' => 'unknown@mai.com',
+            'password' => 'secret'
+        ];
+
+        $this->json('POST', '/users/login', $payload)
+            ->seeStatusCode(Response::HTTP_NOT_FOUND)
+            ->seeJsonEquals([
+                'code' => Response::HTTP_NOT_FOUND,
+                'errors' => [
+                    'Invalid email or username.'
+                ]
+            ]);
     }
 
     /**
