@@ -23,6 +23,7 @@ class NoteTransformer extends Transformer
             'id' => $model->getAttribute('id'),
             'title' => $model->getAttribute('title'),
             'text' => $model->getAttribute('text'),
+            'user_id' => $model->getAttribute('user_id'),
             'created_at' => $model->getAttribute('created_at'),
             'updated_at' => $model->getAttribute('updated_at'),
         ];

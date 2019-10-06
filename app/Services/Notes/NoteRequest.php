@@ -11,7 +11,6 @@ class NoteRequest extends RequestValidation
         return [
             'title' => 'required|string',
             'text' => 'required|string',
-            'user_id' => 'required|integer',
         ];
     }
 }

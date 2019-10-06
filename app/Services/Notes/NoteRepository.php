@@ -2,12 +2,14 @@
 
 namespace App\Services\Notes;
 
+use Illuminate\Support\Facades\Auth;
+
 class NoteRepository
 {
 
     public function index()
     {
-        return NoteModel::paginate(5);
+        return NoteModel::paginate(15);
     }
 
     public function getById($id)
@@ -17,7 +19,9 @@ class NoteRepository
 
     public function create($data)
     {
-        return NoteModel::create($data);
+        return NoteModel::create(array_merge(
+            $data, ['user_id' => Auth::user()->id ]
+        ));
     }
 
     public function delete($id)

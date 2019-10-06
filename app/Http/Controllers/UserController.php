@@ -9,6 +9,7 @@ use App\Services\Users\RegisterRequest;
 use App\Services\Users\UserRepository;
 use App\Services\Users\UserTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class UserController
 {
@@ -41,7 +42,6 @@ class UserController
     public function show(Request $request)
     {
         return $this->adapter->setTransformer(new UserTransformer())
-            ->setStatusCode(201)
             ->render($request->user());
     }
 
@@ -53,6 +53,7 @@ class UserController
 
         return $this->adapter
             ->setTransformer($this->transformer)
+            ->setStatusCode(Response::HTTP_CREATED)
             ->render($user);
     }
 

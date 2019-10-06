@@ -48,7 +48,7 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ValidationException){
             $errors = [
-                'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
                 'errors' => $exception->errors()
             ];
             return response()->json(
@@ -59,7 +59,7 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof ModelNotFoundException){
             $errors = [
-                'code' => Response::HTTP_NOT_FOUND,
+                'status' => Response::HTTP_NOT_FOUND,
                 'errors' => $exception->getMessage()
             ];
             return response()->json(
